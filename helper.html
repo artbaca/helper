@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Options Bar Styles */
+        .options-bar {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f0f0f0;
+        }
+
+        .options-bar::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .options-bar::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .options-bar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .options-section {
+            flex: 0 0 auto;
+            min-width: 100px;
+            border-right: 1px solid #eee;
+            padding-right: 15px;
+            position: relative;
+        }
+
+        .options-section:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .options-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+
+        .option-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-btn.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /*  Function Grid Styles */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            width: 100%;
+        }
+
+        /* Number Grid Styles */
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            width: 100%;
+        }
+
+        .number-btn {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .number-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .number-btn.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Position-specific colors */
+        [data-position="position-1"] .option-btn {
+            background-color: #f5deb3;
+        }
+
+        [data-position="position-2"] .option-btn {
+            background-color: #d2b48c;
+        }
+
+        [data-position="position-3"] .option-btn {
+            background-color: #90ee90;
+        }
+
+        [data-position="position-4"] .option-btn {
+            background-color: #87ceeb;
+        }
+
+        [data-position="position-5"] .option-btn {
+            background-color: #dda0dd;
+        }
+
+        [data-position="position-6"] .number-btn {
+            background-color: #ffa07a;
+        }
+
+        [data-position="position-7"] .option-btn {
+            background-color: #ffd700;
+        }
+
+        /* Selected String Section Styles */
+        .selected-string-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .selected-string-section h2 {
+            margin-bottom: 15px;
+            color: #333333;
+            text-align: center;
+        }
+
+        .selected-string {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            word-break: break-all;
+            text-align: center;
+            min-height: 50px;
+            font-weight: bold;
+        }
+
+        /* Fix Position 6 selection styling */
+        [data-position="position-6"] .number-btn.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Name Helper Utility</h1>
+
+        <!-- Options Bar -->
+        <div class="options-bar">
+            <!-- Section 1-->
+            <div class="options-section" id="position-1">
+                <h2>Section 1</h2>
+                <div class="option-options">
+                    <button class="option-btn" data-position="position-1" data-option="ONE">ONE</button>
+                    <button class="option-btn" data-position="position-1" data-option="TWO">TWO</button>
+                    <button class="option-btn" data-position="position-1" data-option="THREE">THREE</button>
+                </div>
+            </div>
+            <!-- Section 2-->
+            <div class="options-section" id="position-1">
+                <h2>Section 1</h2>
+                <div class="option-options">
+                    <button class="option-btn" data-position="position-2" data-option="four">four</button>
+                    <button class="option-btn" data-position="position-2" data-option="five">five</button>
+                    <button class="option-btn" data-position="position-2" data-option="six">six</button>
+                </div>
+            </div>
+            <!--  Section 4-->
+            <div class="options-section" id="position-4">
+                <h2>Section 4</h2>
+                <div class="function-grid">
+                    <button class="option-btn" data-position="position-4" data-option="#">#</button>
+
+
+                </div>
+            </div>
+            <!-- Section 5-->
+            <div class="options-section" id="position-5">
+                <h2>Section 5</h2>
+                <div class="number-grid">
+                    <button class="option-btn" data-position="position-5" data-option="1">1</button>
+                    <button class="option-btn" data-position="position-5" data-option="2">2</button>
+                    <button class="option-btn" data-position="position-5" data-option="3">3</button>
+                    <button class="option-btn" data-position="position-5" data-option="4">4</button>
+                    <button class="option-btn" data-position="position-5" data-option="5">5</button>
+                    <button class="option-btn" data-position="position-5" data-option="6">6</button>
+                    <button class="option-btn" data-position="position-5" data-option="7">7</button>
+                    <button class="option-btn" data-position="position-5" data-option="8">8</button>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!-- Item Visualization -->
+        <div class="item-visualization">
+            <div class="item-stack"></div>
+        </div>
+        <div class="selected-string"></div>
+    </div>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+            const optionButtons = document.querySelectorAll('.option-btn');
+
+            // Define which positions are single-select
+            const singleSelectPositions = ['position-1', 'position-2', 'position-3', 'position-4', 'position-5', 'position-6', 'position-7'];
+
+            // Track selected options
+            const selectedOptions = {
+                'position-1': null,
+                'position-2': null,
+                'position-3': new Set(),
+                'position-4': new Set(),
+                'position-5': new Set(),
+                'position-6': new Set(),
+                'position-7': new Set()
+            };
+
+            // Add click event listeners to all option buttons
+            optionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const position = button.dataset.position;
+                    const option = button.dataset.option;
+
+                    if (singleSelectPositions.includes(position)) {
+                        // Handle single-select positions
+                        if (selectedOptions[position] !== option) {
+                            // Deselect previous button if any
+                            const previousButton = document.querySelector(`.option-btn[data-position="${position}"].selected`);
+                            if (previousButton) {
+                                previousButton.classList.remove('selected');
+                            }
+
+                            // Select new button
+                            button.classList.add('selected');
+                            selectedOptions[position] = option;
+                        }
+                    } else {
+                        // Handle multi-select positions
+                        if (button.classList.contains('selected')) {
+                            button.classList.remove('selected');
+                            selectedOptions[position].delete(option);
+                        } else {
+                            button.classList.add('selected');
+                            selectedOptions[position].add(option);
+                        }
+                    }
+
+                    updateSelectedString();
+                });
+            });
+
+            function updateSelectedString() {
+                const selectedString = document.querySelector('.selected-string');
+                const selectedOptions = [];
+
+                // Get all selected buttons
+                const selectedButtons = document.querySelectorAll('.option-btn.selected');
+
+                // Sort buttons by position
+                const sortedButtons = Array.from(selectedButtons).sort((a, b) => {
+                    const positionA = a.dataset.position;
+                    const positionB = b.dataset.position;
+                    return positionA.localeCompare(positionB);
+                });
+
+                // Concatenate selected options
+                sortedButtons.forEach(button => {
+                    const option = button.dataset.option;
+                    selectedOptions.push(option);
+                });
+
+                // Update the string display
+                selectedString.textContent = selectedOptions.join('');
+            }
+        }); </script>
+</body>
+
+</html>
